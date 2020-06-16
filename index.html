@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ElektLabs Project</title>
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Color picker stylesheet -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+</head>
+
+<body>
+    <script type="text/javascript"> //Table generator
+        function generate_table() {
+            var body = document.getElementsByTagName("body")[0];
+            var tbl = document.createElement("table");
+            var tblBody = document.createElement("tbody");
+            for (var i = 0; i < 8; i++) {
+                var row = document.createElement("tr");
+                for (var j = 0; j < 8; j++) { //creating td with unique id
+                    var cell = document.createElement("td");
+                    var cellText = document.createTextNode("X: " + j + ", Y: " + i);
+                    cell.setAttribute("id", i + "x" + j);
+                    if ((i + j) % 2 == 1) { // Default chess coloring
+                        cell.style.backgroundColor = `rgba(0, 0, 0, 1)`;
+                        cell.style.color = `rgba(255, 255, 255, 1)`;
+                    }
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                }
+                tblBody.appendChild(row);
+            }
+            tbl.appendChild(tblBody);
+            body.appendChild(tbl);
+            tbl.setAttribute("border", "1");
+        }
+        generate_table();
+    </script>
+
+    <!-- Color Picker script -->
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+
+    <div class="options">
+        <div class="cPickerLabel">
+            <!-- Color Picker show container -->
+            <p>Color picker:</p>
+            <div class="color-picker"></div>
+        </div>
+
+        <form id="position" action="" method="GET">
+            <!-- XY form -->
+            <div class="formY">
+                select Y:
+                <select name="posX">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+            <div class="formY">
+                select X:
+                <select name="posY">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+            <button type="button" id="btnSubmit" onclick="getFormValue(this.form.posX, this.form.posY);">Submit</button>
+            <button type="button" id="btnBack" onclick="Back();">Back</button>
+        </form>
+    </div>
+
+    <script> // Color picker settings
+        const pickr = Pickr.create({
+            el: '.color-picker',
+            theme: 'classic', // or 'monolith', or 'nano'
+
+            swatches: [
+                'rgba(244, 67, 54, 1)',
+                'rgba(233, 30, 99, 1)',
+                'rgba(156, 39, 176, 1)',
+                'rgba(103, 58, 183, 1)',
+                'rgba(63, 81, 181, 1)',
+                'rgba(33, 150, 243, 1)',
+                'rgba(3, 169, 244, 1)',
+                'rgba(0, 188, 212, 1)',
+                'rgba(0, 150, 136, 1)',
+                'rgba(76, 175, 80, 1)',
+                'rgba(139, 195, 74, 1)',
+                'rgba(205, 220, 57, 1)',
+                'rgba(255, 235, 59, 1)',
+                'rgba(255, 193, 7, 1)'
+            ],
+
+            components: {
+
+                // settings
+                preview: true,
+                opacity: true,
+                hue: true,
+
+                // Color styles
+                interaction: {
+                    hex: false,
+                    rgba: true,
+                    hsla: false,
+                    hsva: false,
+                    cmyk: false,
+                    input: true,
+                    clear: true,
+                    save: true
+                }
+            }
+        });
+    </script>
+
+    <script>
+        var finalPosition;
+
+        //Get data from form (Submit)
+        function getFormValue(posX, posY) {
+            var input1 = posX.selectedIndex;
+            var input2 = posY.selectedIndex;
+            var positionX = posX.options[input1].value;
+            var positionY = posY.options[input2].value;
+
+            finalPosition = positionX + "x" + positionY;
+
+            //Get element by form options
+            tdColor = document.getElementById(finalPosition);
+
+            //Changing the color by submit
+            tdColor.style.backgroundColor = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
+        }
+
+        function Back() { // Reset back to chess look (Back)
+            location.reload()
+        }
+    </script>
+
+    <script> // Color picker console log
+        var color;
+        pickr.on('change', (...args) => {
+            color = args[0].toRGBA();
+            console.log('change', color);
+        });
+    </script>
+
+</body>
+
+</html>
